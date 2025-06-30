@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سجل الخطابات - AI Letter Generator</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="logo.svg" alt="NetZero Logo">
+                <span>AI Letter Generator</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="create-letter.html" class="nav-link">
+                    <i class="fas fa-plus-circle"></i>
+                    إنشاء خطاب جديد
+                </a></li>
+                <li><a href="letter-history.html" class="nav-link active">
+                    <i class="fas fa-history"></i>
+                    سجل الخطابات
+                </a></li>
+                <li><a href="review-letter.html" class="nav-link">
+                    <i class="fas fa-check-circle"></i>
+                    مراجعة خطاب
+                </a></li>
+            </ul>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <main class="main-container">
+        <div class="page-header">
+            <h1>سجل الخطابات</h1>
+        </div>
+
+        <div class="filters-section">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="ابحث عن المستلم أو الرقم المرجعي للخطاب">
+            </div>
+            
+            <div class="filter-group">
+                <select id="letterTypeFilter">
+                    <option value="">جميع أنواع الخطابات</option>
+                    <option value="جديد">جديد</option>
+                    <option value="رد">رد</option>
+                    <option value="متابعة">متابعة</option>
+                    <option value="تعاون">تعاون</option>
+                </select>
+                
+                <select id="reviewStatusFilter">
+                    <option value="">جميع حالات المراجعة</option>
+                    <option value="جاهز للإرسال">جاهز للإرسال</option>
+                    <option value="في الانتظار">في الانتظار</option>
+                    <option value="يحتاج إلى تحسينات">يحتاج إلى تحسينات</option>
+                    <option value="مرفوض">مرفوض</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="letters-table-container">
+            <table class="letters-table">
+                <thead>
+                    <tr>
+                        <th>الرقم المرجعي</th>
+                        <th>التاريخ</th>
+                        <th>نوع الخطاب</th>
+                        <th>المراجعة</th>
+                        <th>الإرسال</th>
+                        <th>المستلم</th>
+                        <th>الموضوع</th>
+                        <th>اسم المراجع</th>
+                        <th>الملاحظات</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody id="lettersTableBody">
+                    <!-- Letters will be loaded here -->
+                </tbody>
+            </table>
+            <div class="no-data" id="noData" style="display: none;">
+                <i class="fas fa-inbox"></i>
+                <p>لا توجد خطابات</p>
+            </div>
+        </div>
+    </main>
+
+    <script src="sheets.js"></script>
+    <script src="main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            loadLetterHistory();
+        });
+    </script>
+</body>
+</html>
+

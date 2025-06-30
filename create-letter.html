@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إنشاء خطاب جديد - AI Letter Generator</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="document-template.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="logo.svg" alt="NetZero Logo">
+                <span>AI Letter Generator</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="create-letter.html" class="nav-link active">
+                    <i class="fas fa-plus-circle"></i>
+                    إنشاء خطاب جديد
+                </a></li>
+                <li><a href="letter-history.html" class="nav-link">
+                    <i class="fas fa-history"></i>
+                    سجل الخطابات
+                </a></li>
+                <li><a href="review-letter.html" class="nav-link">
+                    <i class="fas fa-check-circle"></i>
+                    مراجعة خطاب
+                </a></li>
+            </ul>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <main class="main-container">
+        <div class="page-header">
+            <h1>إنشاء خطاب جديد</h1>
+        </div>
+
+        <div class="content-grid">
+            <section class="form-section">
+                <h2>بيانات الخطاب</h2>
+                <form id="letterForm">
+                    <div class="form-group">
+                        <label for="letterType">نوع الخطاب <span class="required">*</span></label>
+                        <select id="letterType" name="category" required>
+                            <option value="">اختر نوع الخطاب</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="previousLetterGroup" style="display: none;">
+                        <label for="previousLetter">الخطاب السابق <span class="required">*</span></label>
+                        <select id="previousLetter" name="previous_letter_id">
+                            <option value="">اختر الخطاب السابق</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="letterPurpose">الغرض من الخطاب <span class="required">*</span></label>
+                        <input type="text" id="letterPurpose" name="title" required> <!-- Changed to text field -->
+                    </div>
+
+                    <div class="form-group">
+                        <label>هل هذه أول مراسلة؟ <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <label>
+                                <input type="radio" name="isFirst" value="true" required>
+                                نعم
+                            </label>
+                            <label>
+                                <input type="radio" name="isFirst" value="false" required>
+                                لا
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="letterStyle">المرسل</label>
+                        <select id="letterStyle" name="member_name">
+                            <option value="">اختر الاسم (اختياري)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="recipient">المرسل إليه <span class="required">*</span></label>
+                        <input type="text" id="recipient" name="recipient" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="recipientTitle">لقب المرسل إليه <span class="required">*</span></label>
+                        <select id="recipientTitle" name="recipient_title" required>
+                            <option value="">اختر اللقب</option>
+                            <!-- Options will be dynamically loaded from sheets.js -->
+                        </select>
+                        <input type="text" id="otherRecipientTitle" name="other_recipient_title" style="display:none; margin-top: 10px;" placeholder="أدخل اللقب الآخر">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="organizationName">اسم الجهة <span class="required">*</span></label>
+                        <input type="text" id="organizationName" name="organization_name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="recipientJobTitle">المسمى الوظيفي للمرسل إليه <span class="required">*</span></label>
+                        <input type="text" id="recipientJobTitle" name="recipient_job_title" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="letterContent">محتوى الخطاب <span class="required">*</span></label>
+                        <textarea id="letterContent" name="prompt" rows="6" required></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-button" id="generateButton">
+                        <i class="fas fa-magic"></i>
+                        إنشاء الخطاب
+                    </button>
+                </form>
+            </section>
+
+            <section class="preview-section" id="previewSection" style="display: none;">
+                <h2>معاينة الخطاب</h2>
+                <div class="preview-container">
+                    <!-- Document Template Preview -->
+                    <div class="document-template" id="documentTemplate">
+                        <div class="document-header">
+                            <div class="company-logo">
+                                <img src="logo.svg" alt="NetZero Logo">
+                                <div class="company-name">NetZero</div>
+                            </div>
+                            <div class="company-info">
+                                <div class="date" id="currentDate"></div>
+                                <div>AL-HAYYAD AL-SAFRI FOR ENVIRONMENTAL SERVICES</div>
+                                <div>خدمات الحياد الصفري للبيئة</div>
+                                <div>الرقم: <span id="letterNumber">001/2024</span></div>
+                                <div>الموافق: <span id="hijriDate"></span></div>
+                                <div>اليوم: <span id="dayName"></span></div>
+                            </div>
+                        </div>
+                        
+                        <div class="document-title" id="letterTitle">
+                            بسم الله الرحمن الرحيم
+                        </div>
+                        
+                        <div class="letter-content" id="letterContentFormatted">
+                            <div class="recipient-info" id="recipientSection">
+                                <p>السيد/ة: <span id="recipientName"></span></p>
+                                <p>المحترم/ة</p>
+                            </div>
+                            
+                            <div class="greeting">
+                                <p>السلام عليكم ورحمة الله وبركاته،</p>
+                            </div>
+                            
+                            <div class="letter-body" id="mainLetterContent">
+                                <!-- Generated letter content will be inserted here -->
+                            </div>
+                            
+                            <div class="closing">
+                                <p>وتفضلوا بقبول فائق الاحترام والتقدير،</p>
+                            </div>
+                        </div>
+                        
+                        <div class="signature-section">
+                            <div></div>
+                            <div class="sender-info">
+                                <div class="sender-name" id="senderName">زياد أحمد بن حكم عسيري</div>
+                                <div class="sender-title">الإدارة العامة لتنمية القطاع الغير ربحي بوزارة البلديات والإسكان سلمه الله</div>
+                                <div style="margin-top: 10px;">بخدمة ورحمة الله وبركاته.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="document-footer">
+                            <p>هذا الخطاب تم إنشاؤه باستخدام منصة الذكاء الاصطناعي لإنشاء الخطابات</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Hidden textarea for backward compatibility -->
+                    <textarea id="letterPreview" class="letter-preview" style="display: none;"></textarea>
+                    
+                    <div class="template-selection">
+                        <h3>اختر قالب الخطاب</h3>
+                        <div class="template-options">
+                            <label class="template-option">
+                                <input type="radio" name="template" value="template1" checked>
+                                <span>القالب الرسمي</span>
+                            </label>
+                            <label class="template-option">
+                                <input type="radio" name="template" value="template2">
+                                <span>القالب الحديث</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button class="save-button" id="saveButton">
+                        <i class="fas fa-save"></i>
+                        حفظ ومتابعة
+                    </button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <div class="loader" id="loader">
+        <div class="spinner"></div>
+        <p>جاري إنشاء الخطاب...</p>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="sheets.js"></script>
+    <script src="api.js"></script>
+    <script src="main.js"></script>
+    <script src="document-template.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const recipientTitleSelect = document.getElementById("recipientTitle");
+            const otherRecipientTitleInput = document.getElementById("otherRecipientTitle");
+            const letterTypeSelect = document.getElementById("letterType");
+            const previousLetterGroup = document.getElementById("previousLetterGroup");
+            const previousLetterSelect = document.getElementById("previousLetter");
+
+            // Handle recipient title selection
+            recipientTitleSelect.addEventListener("change", function() {
+                if (this.value === "أخرى") {
+                    otherRecipientTitleInput.style.display = "block";
+                    otherRecipientTitleInput.setAttribute("required", "true");
+                } else {
+                    otherRecipientTitleInput.style.display = "none";
+                    otherRecipientTitleInput.removeAttribute("required");
+                    otherRecipientTitleInput.value = ""; // Clear value when hidden
+                }
+            });
+
+            // Handle letter type selection
+            letterTypeSelect.addEventListener("change", function() {
+                if (this.value === "خطاب إلحاقي") {
+                    previousLetterGroup.style.display = "block";
+                    previousLetterSelect.setAttribute("required", "true");
+                    // Load previous letters
+                    loadPreviousLetters();
+                } else {
+                    previousLetterGroup.style.display = "none";
+                    previousLetterSelect.removeAttribute("required");
+                    previousLetterSelect.value = "";
+                }
+            });
+        });
+
+        // Function to load previous letters
+        async function loadPreviousLetters() {
+            try {
+                const letters = await loadSubmissionsData();
+                const previousLetterSelect = document.getElementById("previousLetter");
+                
+                // Clear existing options except the first one
+                previousLetterSelect.innerHTML = '<option value="">اختر الخطاب السابق</option>';
+                
+                // Add letters as options
+                letters.forEach(letter => {
+                    const option = document.createElement("option");
+                    option.value = letter.id;
+                    option.textContent = `${letter.id} - ${letter.recipient} - ${letter.subject || letter.type}`;
+                    option.dataset.content = letter.content || '';
+                    previousLetterSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading previous letters:', error);
+            }
+        }
+    </script>
+</body>
+</html>

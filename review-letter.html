@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مراجعة خطاب - AI Letter Generator</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="logo.svg" alt="NetZero Logo">
+                <span>AI Letter Generator</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="create-letter.html" class="nav-link">
+                    <i class="fas fa-plus-circle"></i>
+                    إنشاء خطاب جديد
+                </a></li>
+                <li><a href="letter-history.html" class="nav-link">
+                    <i class="fas fa-history"></i>
+                    سجل الخطابات
+                </a></li>
+                <li><a href="review-letter.html" class="nav-link active">
+                    <i class="fas fa-check-circle"></i>
+                    مراجعة خطاب
+                </a></li>
+            </ul>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <main class="main-container">
+        <div class="page-header">
+            <h1>مراجعة خطاب</h1>
+        </div>
+
+        <div class="letter-selection" id="letterSelection">
+            <h2>اختر خطاباً للمراجعة</h2>
+            <select id="letterSelect" class="letter-select">
+                <option value="">اختر خطاباً</option>
+            </select>
+        </div>
+
+        <div class="review-form" id="reviewForm" style="display: none;">
+            <form id="reviewFormElement">
+                <div class="form-group">
+                    <label for="reviewerName">اسم المراجع <span class="required">*</span></label>
+                    <input type="text" id="reviewerName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="letterContent">محتوى الخطاب</label>
+                    <textarea id="letterContentReview" rows="10"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="reviewNotes">الملاحظات</label>
+                    <textarea id="reviewNotes" rows="4"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="reviewComplete">
+                        تمت المراجعة
+                    </label>
+                </div>
+
+                <div class="review-actions">
+                    <button type="button" class="action-button ready" id="readyButton" disabled>
+                        <i class="fas fa-check"></i>
+                        جاهز للإرسال
+                    </button>
+                    <button type="button" class="action-button needs-improvement" id="improvementButton" disabled>
+                        <i class="fas fa-exclamation-triangle"></i>
+                        يحتاج إلى تحسينات
+                    </button>
+                    <button type="button" class="action-button rejected" id="rejectedButton" disabled>
+                        <i class="fas fa-times"></i>
+                        مرفوض
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="sheets.js"></script>
+    <script src="main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            loadLettersForReview();
+            setupReviewForm();
+        });
+    </script>
+</body>
+</html>
