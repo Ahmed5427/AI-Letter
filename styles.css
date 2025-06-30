@@ -499,6 +499,7 @@ body.dark-mode .letters-table-container {
     width: 100%;
     border-collapse: collapse;
     table-layout: auto;
+    min-width: 1200px;
 }
 
 .letters-table thead {
