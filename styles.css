@@ -1111,3 +1111,34 @@ body.dark-mode .highlighted-letter {
     background-color: rgba(0, 166, 81, 0.2) !important;
 }
 
+
+/* Download button states */
+.action-icon:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.download-success {
+    animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Spinner animation for loading state */
+.fa-spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
