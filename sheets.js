@@ -81,6 +81,7 @@ function processSubmissions(submissions) {
         recipient: row[4] || '',
         subject: row[5] || '',
         content: row[6] || '', // Column G
+        letterLink: row[8] || '', // Column I - Add this line!
         reviewStatus: row[9] || 'في الانتظار',
         sendStatus: row[10] || 'في الانتظار',
         reviewerName: row[12] || '', // Column M
