@@ -170,6 +170,12 @@ function printLetter(id) {
 }
 
 async function downloadLetter(id) {
+    // Show loading state
+    const downloadButton = event.target.closest('.action-icon');
+    const originalHTML = downloadButton.innerHTML;
+    downloadButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    downloadButton.disabled = true;
+    
     try {
         // Load submissions data to find the letter link
         const letters = await loadSubmissionsData();
@@ -185,22 +191,56 @@ async function downloadLetter(id) {
             return;
         }
         
+        // Fetch the file to check if it exists
+        const response = await fetch(letter.letterLink, { method: 'HEAD' });
+        
+        if (!response.ok) {
+            alert('الملف غير متوفر أو تم حذفه');
+            return;
+        }
+        
         // Create a temporary link element and trigger download
         const link = document.createElement('a');
         link.href = letter.letterLink;
-        link.download = `خطاب_${letter.id}_${letter.recipient}.pdf`; // Suggested filename
-        link.target = '_blank'; // Open in new tab as fallback
+        
+        // Generate a meaningful filename
+        const fileName = `خطاب_${letter.id}_${letter.recipient.replace(/[^a-zA-Z0-9\u0600-\u06FF]/g, '_')}.pdf`;
+        link.download = fileName;
+        link.target = '_blank';
         
         // Append to document, click, and remove
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
         
-        console.log(`تم تحميل الخطاب: ${letter.id}`);
+        // Optional: Show success message
+        const successMessage = document.createElement('div');
+        successMessage.className = 'download-success';
+        successMessage.textContent = 'تم بدء التحميل';
+        successMessage.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            z-index: 1000;
+            font-family: 'Cairo', sans-serif;
+        `;
+        document.body.appendChild(successMessage);
+        
+        setTimeout(() => {
+            document.body.removeChild(successMessage);
+        }, 3000);
         
     } catch (error) {
         console.error('Error downloading letter:', error);
         alert('حدث خطأ أثناء تحميل الخطاب');
+    } finally {
+        // Restore button state
+        downloadButton.innerHTML = originalHTML;
+        downloadButton.disabled = false;
     }
 }
 
