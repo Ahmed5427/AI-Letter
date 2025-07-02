@@ -169,11 +169,41 @@ function printLetter(id) {
     window.print();
 }
 
-function downloadLetter(id) {
-    // Implement download functionality
-    // This would call your API to get the PDF
-    alert('جاري تحميل الخطاب...');
+async function downloadLetter(id) {
+    try {
+        // Load submissions data to find the letter link
+        const letters = await loadSubmissionsData();
+        const letter = letters.find(l => l.id === id);
+        
+        if (!letter) {
+            alert('لم يتم العثور على الخطاب');
+            return;
+        }
+        
+        if (!letter.letterLink) {
+            alert('رابط تحميل الخطاب غير متوفر');
+            return;
+        }
+        
+        // Create a temporary link element and trigger download
+        const link = document.createElement('a');
+        link.href = letter.letterLink;
+        link.download = `خطاب_${letter.id}_${letter.recipient}.pdf`; // Suggested filename
+        link.target = '_blank'; // Open in new tab as fallback
+        
+        // Append to document, click, and remove
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        console.log(`تم تحميل الخطاب: ${letter.id}`);
+        
+    } catch (error) {
+        console.error('Error downloading letter:', error);
+        alert('حدث خطأ أثناء تحميل الخطاب');
+    }
 }
+
 
 async function deleteLetter(id) {
     if (confirm("هل أنت متأكد من حذف هذا الخطاب؟")) {
