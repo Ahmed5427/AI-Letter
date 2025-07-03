@@ -56,24 +56,53 @@ module.exports = async (req, res) => {
                 const targetUrl = `${API_BASE_URL}/archive-letter`;
                 const formData = new FormData();
 
-                // Append fields (formidable v3 returns single values, not arrays)
+                // Append fields - Handle both single values and arrays properly
                 for (const key in fields) {
                     if (key !== 'endpoint') { // Skip the endpoint field we added
                         const value = fields[key];
-                        formData.append(key, value);
-                        console.log(`Added field: ${key} = ${value}`);
+                        
+                        // Check if value is an array
+                        if (Array.isArray(value)) {
+                            // If it's an array, append each value separately or take the first one
+                            if (value.length > 0) {
+                                // For most cases, we want the first value
+                                formData.append(key, value[0]);
+                                console.log(`Added field (from array): ${key} = ${value[0]}`);
+                            }
+                        } else {
+                            // If it's a single value, append it directly
+                            formData.append(key, value);
+                            console.log(`Added field: ${key} = ${value}`);
+                        }
                     }
                 }
 
                 // Append files
                 for (const key in files) {
                     const file = files[key];
-                    if (file && file.filepath) {
-                        formData.append(key, fs.createReadStream(file.filepath), {
-                            filename: file.originalFilename || 'file',
-                            contentType: file.mimetype || 'application/octet-stream'
+                    
+                    // Handle both single files and arrays of files
+                    if (Array.isArray(file)) {
+                        // If it's an array of files, append each one
+                        file.forEach((f, index) => {
+                            if (f && f.filepath) {
+                                const fileKey = file.length > 1 ? `${key}_${index}` : key;
+                                formData.append(fileKey, fs.createReadStream(f.filepath), {
+                                    filename: f.originalFilename || 'file',
+                                    contentType: f.mimetype || 'application/octet-stream'
+                                });
+                                console.log(`Added file (from array): ${fileKey} = ${f.originalFilename}`);
+                            }
                         });
-                        console.log(`Added file: ${key} = ${file.originalFilename}`);
+                    } else {
+                        // Single file
+                        if (file && file.filepath) {
+                            formData.append(key, fs.createReadStream(file.filepath), {
+                                filename: file.originalFilename || 'file',
+                                contentType: file.mimetype || 'application/octet-stream'
+                            });
+                            console.log(`Added file: ${key} = ${file.originalFilename}`);
+                        }
                     }
                 }
 
