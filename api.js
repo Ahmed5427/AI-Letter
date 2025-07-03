@@ -81,15 +81,17 @@ async function archiveLetter(formData) {
         for (let [key, value] of formData.entries()) {
             payload[key] = value;
         }
-        // Add endpoint information for the proxy
-        payload.endpoint = 'archive-letter';
 
+        // Structure the request consistently with generateLetter
         const response = await fetch('/api/proxy', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(payload)
+            body: JSON.stringify({
+                endpoint: 'archive-letter',  // Move endpoint to the top level
+                data: payload               // Put the actual data in a 'data' field
+            })
         });
 
         if (!response.ok) {
