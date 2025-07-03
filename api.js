@@ -82,18 +82,23 @@ async function archiveLetter(formData) {
             payload[key] = value;
         }
 
-        // Structure the request consistently with generateLetter
+        const requestBody = {
+            endpoint: 'archive-letter',
+            data: payload
+        };
+
+        console.log('Sending archive request:', requestBody); // Debug log
+
         const response = await fetch('/api/proxy', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                endpoint: 'archive-letter',  // Move endpoint to the top level
-                data: payload               // Put the actual data in a 'data' field
-            })
+            body: JSON.stringify(requestBody)
         });
 
+        console.log('Response status:', response.status); // Debug log
+        
         if (!response.ok) {
             const errorText = await response.text();
             console.error('Archive response error:', errorText);
