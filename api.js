@@ -76,31 +76,31 @@ async function generateLetter(formData) {
 // Archive Letter API
 async function archiveLetter(formData) {
     try {
-        // Create a new FormData object to ensure proper formatting
-        const archiveFormData = new FormData();
-        
-        // Copy all form data entries
+        // Convert FormData to a plain JS object
+        const payload = {};
         for (let [key, value] of formData.entries()) {
-            archiveFormData.append(key, value);
+            payload[key] = value;
         }
-        
         // Add endpoint information for the proxy
-        archiveFormData.append('endpoint', 'archive-letter');
-        
+        payload.endpoint = 'archive-letter';
+
         const response = await fetch('/api/proxy', {
             method: 'POST',
-            body: archiveFormData // Send FormData directly, don't set Content-Type header
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
         });
-        
+
         if (!response.ok) {
             const errorText = await response.text();
             console.error('Archive response error:', errorText);
             throw new Error(`Failed to archive letter: ${response.status}`);
         }
-        
+
         const data = await response.json();
         return data;
-        
+
     } catch (error) {
         console.error('Error archiving letter:', error);
         alert('حدث خطأ أثناء حفظ الخطاب. الرجاء المحاولة مرة أخرى.');
