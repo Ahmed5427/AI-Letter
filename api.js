@@ -127,7 +127,7 @@ if (document.getElementById('saveButton')) {
         const selectedTemplate = document.querySelector('input[name="template"]:checked').value;
         
         // Generate PDF from letter content
-        const pdfBlob = await generatePDF(letterContent, selectedTemplate);
+        
         
         // Prepare archive data as FormData
         const formData = new FormData();
