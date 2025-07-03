@@ -138,8 +138,8 @@ module.exports = async (req, res) => {
             });
             
         } else {
-            // Handle JSON requests (for generate-letter)
-            console.log("Processing JSON request for generate-letter");
+            // Handle JSON requests (for generate-letter and archive-letter)
+            console.log("Processing JSON request");
             
             let requestData;
             try {
@@ -156,7 +156,7 @@ module.exports = async (req, res) => {
                 const targetUrl = `${API_BASE_URL}/generate-letter`;
                 
                 try {
-                    console.log("Attempting real API call to:", targetUrl);
+                    console.log("Attempting generate API call to:", targetUrl);
                     console.log("Payload:", data);
                     
                     const response = await axios.post(targetUrl, data, {
@@ -186,7 +186,42 @@ module.exports = async (req, res) => {
                         });
                     }
                 }
+            } else if (endpoint === "archive-letter") {
+                const targetUrl = `${API_BASE_URL}/archive-letter`;
+                
+                try {
+                    console.log("Attempting archive API call to:", targetUrl);
+                    console.log("Payload:", data);
+                    
+                    const response = await axios.post(targetUrl, data, {
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        httpsAgent: agent,
+                        timeout: 30000, // 30 seconds timeout
+                    });
+                    
+                    console.log("Archive API success:", response.status);
+                    res.status(200).json(response.data);
+                    
+                } catch (axiosError) {
+                    console.error("Archive API error:", axiosError.message);
+                    if (axiosError.response) {
+                        console.error("Archive API response data:", axiosError.response.data);
+                        console.error("Archive API response status:", axiosError.response.status);
+                        res.status(axiosError.response.status).json({
+                            error: "Archive API error",
+                            message: axiosError.response.data || axiosError.message
+                        });
+                    } else {
+                        res.status(500).json({
+                            error: "Internal server error",
+                            message: "Failed to archive letter. Please try again later."
+                        });
+                    }
+                }
             } else {
+                console.log("Invalid endpoint:", endpoint);
                 res.status(400).json({ error: "Invalid endpoint" });
             }
         }
