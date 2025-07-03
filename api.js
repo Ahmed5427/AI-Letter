@@ -131,11 +131,11 @@ if (document.getElementById('saveButton')) {
         
         // Prepare archive data as FormData
         const formData = new FormData();
-        formData.append('file', pdfBlob, 'letter.pdf');
+        
         formData.append('letter_content', letterContent);
         formData.append('letter_type', document.getElementById('letterType').value);
         formData.append('recipient', document.getElementById('recipient').value);
-        
+        formData.append('template', 'default_template.html');
         // Use the title from the generated letter data
         if (window.generatedLetterData && window.generatedLetterData.Title) {
             formData.append('title', window.generatedLetterData.Title);
