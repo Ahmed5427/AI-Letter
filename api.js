@@ -76,13 +76,26 @@ async function generateLetter(formData) {
 // Archive Letter API
 async function archiveLetter(formData) {
     try {
+        // Create a new FormData object to ensure proper formatting
+        const archiveFormData = new FormData();
+        
+        // Copy all form data entries
+        for (let [key, value] of formData.entries()) {
+            archiveFormData.append(key, value);
+        }
+        
+        // Add endpoint information for the proxy
+        archiveFormData.append('endpoint', 'archive-letter');
+        
         const response = await fetch('/api/proxy', {
             method: 'POST',
-            body: formData // Send FormData directly, don't set Content-Type header
+            body: archiveFormData // Send FormData directly, don't set Content-Type header
         });
         
         if (!response.ok) {
-            throw new Error('Failed to archive letter');
+            const errorText = await response.text();
+            console.error('Archive response error:', errorText);
+            throw new Error(`Failed to archive letter: ${response.status}`);
         }
         
         const data = await response.json();
