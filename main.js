@@ -76,10 +76,7 @@ function renderLettersTable(letters) {
                     <button class="action-icon" onclick="reviewLetter(\'${letter.id}\')" title="مراجعة">
                         <i class="fas fa-eye"></i>
                     </button>
-                    <button class="action-icon" onclick="printLetter(\'${letter.id}\')" title="طباعة">
-                        <i class="fas fa-print"></i>
-                    </button>
-                    <button class="action-icon" onclick="downloadLetter(\'${letter.id}\')" title="تحميل">
+                    <button class="action-icon" onclick="downloadLetter(\'${letter.id}\')" title="تحميل وطباعة">
                         <i class="fas fa-download"></i>
                     </button>
                     <button class="action-icon delete" onclick="deleteLetter(\'${letter.id}\')" title="حذف">
