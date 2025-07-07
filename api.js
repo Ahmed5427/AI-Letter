@@ -43,17 +43,6 @@ async function generateLetter(formData) {
                 payload.previous_letter_id = previousLetterId;
             }
         }
-
-        // Handle received letter content for reply letters
-        const receivedLetterId = formData.get('received_letter_id');
-        if (receivedLetterId && receivedLetterId.trim() !== '') {
-            const receivedLetterSelect = document.getElementById('receivedLetter');
-            const selectedOption = receivedLetterSelect.querySelector(`option[value="${receivedLetterId}"]`);
-            if (selectedOption && selectedOption.dataset.content) {
-                payload.received_letter_content = selectedOption.dataset.content;
-                payload.received_letter_id = receivedLetterId;
-            }
-        }
         
         // Since we can't directly call HTTPS with self-signed cert from browser,
         // we'll use a proxy endpoint
@@ -244,4 +233,3 @@ function generateUniqueId() {
     const random = Math.random().toString(36).substring(2, 15);
     return `${timestamp}-${random}`;
 }
-
