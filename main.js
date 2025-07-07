@@ -76,7 +76,10 @@ function renderLettersTable(letters) {
                     <button class="action-icon" onclick="reviewLetter(\'${letter.id}\')" title="مراجعة">
                         <i class="fas fa-eye"></i>
                     </button>
-                    <button class="action-icon" onclick="downloadLetter(\'${letter.id}\')" title="تحميل وطباعة">
+                    <button class="action-icon" onclick="printLetter(\'${letter.id}\')" title="طباعة">
+                        <i class="fas fa-print"></i>
+                    </button>
+                    <button class="action-icon" onclick="downloadLetter(\'${letter.id}\')" title="تحميل">
                         <i class="fas fa-download"></i>
                     </button>
                     <button class="action-icon delete" onclick="deleteLetter(\'${letter.id}\')" title="حذف">
@@ -166,51 +169,11 @@ function printLetter(id) {
     window.print();
 }
 
-async function downloadLetter(id) {
-    try {
-        const letters = await loadSubmissionsData();
-        const letter = letters.find(l => l.id === id);
-        
-        if (!letter || !letter.letterLink) {
-            alert('رابط الخطاب غير متوفر');
-            return;
-        }
-        
-        let viewerUrl = letter.letterLink;
-        
-        // For Google Drive links, use the viewer URL
-        if (letter.letterLink.includes('drive.google.com')) {
-            // Extract file ID and create viewer URL
-            const fileId = extractGoogleDriveFileId(letter.letterLink);
-            if (fileId) {
-                viewerUrl = `https://drive.google.com/file/d/${fileId}/view`;
-            }
-        }
-        
-        // Open in new tab
-        window.open(viewerUrl, '_blank');
-        
-    } catch (error) {
-        console.error('Error opening letter:', error);
-        alert('حدث خطأ أثناء فتح الخطاب');
-    }
+function downloadLetter(id) {
+    // Implement download functionality
+    // This would call your API to get the PDF
+    alert('جاري تحميل الخطاب...');
 }
-
-function extractGoogleDriveFileId(url) {
-    const patterns = [
-        /\/file\/d\/([a-zA-Z0-9_-]+)/,
-        /open\?id=([a-zA-Z0-9_-]+)/,
-        /id=([a-zA-Z0-9_-]+)/
-    ];
-    
-    for (const pattern of patterns) {
-        const match = url.match(pattern);
-        if (match) return match[1];
-    }
-    
-    return null;
-}
-
 
 async function deleteLetter(id) {
     if (confirm("هل أنت متأكد من حذف هذا الخطاب؟")) {
